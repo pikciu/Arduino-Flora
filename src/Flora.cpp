@@ -62,10 +62,9 @@ bool Flora::enableDataMode(BLERemoteService* service) {
         return false;
     }
 
-    uint8_t buf[2] = {0xA0, 0x1F};
-    dataModeCharacteristic->writeValue(buf, 2, true);
+    uint8_t data[2] = {0xA0, 0x1F};
+    dataModeCharacteristic->writeValue(data, 2, true);
 
-    delay(100);
     return true;
 }
 
@@ -83,16 +82,15 @@ bool Flora::read(BLERemoteService* service, FloraData* data) {
     }
     const char* raw = value.c_str();
 
-    int16_t* temp = (int16_t*)raw;
-    int moisture = raw[7];
-    int light = raw[4] << 8 | raw[3];
-    int conductivity = raw[9] << 8 | raw[8];
+    uint16_t* temp = (uint16_t*)raw;
+    uint32_t light = raw[6] << 24 | raw[5] << 16 | raw[4] << 8 | raw[3];
+    uint8_t moisture = raw[7];
+    uint16_t conductivity = raw[9] << 8 | raw[8];
     
     data->temperature = *temp / 10.0;
     data->moisture = moisture;
     data->light = light;
     data->conductivity = conductivity;
-    
 
     return true;
 }
@@ -110,7 +108,7 @@ bool Flora::readBattery(BLERemoteService* service, FloraData* data) {
         return false;
     }
     const char* raw = value.c_str();
-    int battery = raw[0];
+    uint8_t battery = raw[0];
     data->battery = battery;
     return true;
 }

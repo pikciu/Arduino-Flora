@@ -15,10 +15,10 @@
 struct FloraData
 {
     float temperature;
-    int moisture;
-    int light;
-    int conductivity;
-    int battery;
+    uint8_t moisture;
+    uint32_t light;
+    uint16_t conductivity;
+    uint8_t battery;
 };
 #endif
 
