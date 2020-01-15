@@ -1,7 +1,8 @@
 #include <Flora.h>
 
-Flora::Flora(const char* address) {
-    this->address = address;
+Flora::Flora(const char deviceAddress[BLEDEVICE_ADDRESS_SIZE]) {
+    strncpy(address, deviceAddress, sizeof(address));
+    address[BLEDEVICE_ADDRESS_SIZE - 1] = 0;
 }
 
 bool Flora::connect() {
@@ -86,7 +87,7 @@ bool Flora::read(BLERemoteService* service, FloraData* data) {
     uint32_t light = raw[6] << 24 | raw[5] << 16 | raw[4] << 8 | raw[3];
     uint8_t moisture = raw[7];
     uint16_t conductivity = raw[9] << 8 | raw[8];
-    
+
     data->temperature = *temp / 10.0;
     data->moisture = moisture;
     data->light = light;
